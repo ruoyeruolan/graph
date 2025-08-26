@@ -6,10 +6,13 @@
 # @Time       : 2025/08/26 13:12
 # @Description:
 
+from os import path
 import random
+import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 
+from sklearn.manifold import TSNE
 from matplotlib.lines import Line2D
 
 
@@ -80,3 +83,30 @@ def draw_random_graph_samples(
     # plt.savefig(
     #     os.path.join(model_save_path, f"{dataset_name}/random_samples_of_graphs.png")
     # )
+
+
+def visualize_embeddings(embeddings, true_labels, predicted_labels):
+    tsne = TSNE(n_components=2)
+    embeddings_tsne = tsne.fit_transform(embeddings)
+
+    fig, axs = plt.subplots(1, 2, figsize=(12, 6))
+    fig.suptitle("t-SNE Visualization of Embeddings")
+
+    for ax, labels, title in zip(
+        axs,  # type: ignore
+        [true_labels, predicted_labels],
+        ["True Labels", "Predicted Labels"],
+    ):
+        for label in np.unique(labels):
+            indices = np.where(labels == label)
+            ax.scatter(
+                embeddings_tsne[indices, 0],
+                embeddings_tsne[indices, 1],
+                label=f"Class {label}",
+            )
+        ax.set_title(title)
+        ax.set_xlabel("t-SNE Dimension 1")
+        ax.set_ylabel("t-SNE Dimension 2")
+        ax.legend()
+        ax.grid(True)
+    plt.show()

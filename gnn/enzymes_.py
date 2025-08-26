@@ -8,7 +8,7 @@
 
 from typing import Tuple
 
-from utils.draw_graph import draw_random_graph_samples
+from utils.visualization import draw_random_graph_samples
 
 import torch
 import torch.nn as nn
